@@ -21,9 +21,9 @@ public class MainActivity extends Activity {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
-    static final String BASE_URL = "http://localhost:8080/dsaApp/";
+    static final String BASE_URL = "http://10.0.2.2:8080/dsaApp/";
     public void start(){
-        Gson gson = new GsonBuilder()
+        /*Gson gson = new GsonBuilder()
                 .setLenient()
                 .create();
 
@@ -31,6 +31,25 @@ public class MainActivity extends Activity {
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
+        SwaggerAPI swaggerAPI = retrofit.create(SwaggerAPI.class);
+        List<String> input = new ArrayList<>();
+        Call<List<Track>> call = swaggerAPI.loadTracks();
+        call.enqueue(new Callback<List<Track>>() {
+            @Override
+            public void onResponse(Call<List<Track>> call, Response<List<Track>> response) {
+                if(response.isSuccessful()) {
+                    List<Track> TrackList = response.body();
+                    TrackList.forEach(track -> input.add(track.getTitle()));
+                    mAdapter = new AdapterDatos(input);
+                } else {
+                    System.out.println(response.errorBody());
+                }
+            }
+            @Override
+            public void onFailure(Call<List<Track>> call, Throwable t) {
+                t.printStackTrace();
+            }
+        }); */
     }
 
     @Override
@@ -46,11 +65,36 @@ public class MainActivity extends Activity {
         // use a linear layout manager
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
+
+
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        SwaggerAPI swaggerAPI = retrofit.create(SwaggerAPI.class);
         List<String> input = new ArrayList<>();
-        for (int i = 0; i < 100; i++) {
-            input.add("Test" + i);
-        }// define an adapter
-        mAdapter = new AdapterDatos(input);
-        recyclerView.setAdapter(mAdapter);
+        Call<List<Track>> call = swaggerAPI.loadTracks();
+        call.enqueue(new Callback<List<Track>>() {
+            @Override
+            public void onResponse(Call<List<Track>> call, Response<List<Track>> response) {
+                if(response.isSuccessful()) {
+                    List<Track> TrackList = response.body();
+                    TrackList.forEach(track -> input.add(track.getTitle()));
+                    mAdapter = new AdapterDatos(input);
+                    recyclerView.setAdapter(mAdapter);
+                } else {
+                    System.out.println(response.errorBody());
+                }
+            }
+            @Override
+            public void onFailure(Call<List<Track>> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+
     }
 }

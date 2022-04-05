@@ -2,6 +2,7 @@ package edu.upc.eetac.dsa.restclientandr;
 
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,7 +61,7 @@ public class AdapterDatos extends RecyclerView.Adapter<AdapterDatos.ViewHolderDa
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(ViewHolderDatos holder, final int position) {
+    public void onBindViewHolder(ViewHolderDatos holder, @SuppressLint("RecyclerView") final int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         final String name = values.get(position);
